@@ -10,7 +10,7 @@
  <b>API Path</b>
  <ul>
   <li>/courses</li>
-  <li>/courses/<int:course_id></li>
+  <li>/courses/:course_id</li>
   <li>/categories</li>
-  <li>/categories/<string:category_name>/courses</li>
+  <li>/categories/:category_name/courses</li>
  </ul>
