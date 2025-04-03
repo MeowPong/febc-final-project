@@ -1,0 +1,71 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+
+/* Light mode */
+[data-bs-theme='light'] {
+  background-color: #ffffff; /* สีพื้นหลังสำหรับ light mode */
+  color: #000000; /* สีตัวอักษร */
+}
+
+[data-bs-theme='light'] .navbar.BG-Main {
+  background-color: #f8f9fa; /* สี Navbar ใน light mode */
+}
+
+[data-bs-theme='light'] .offcanvas {
+  background-color: #ffffff; /* สี offcanvas ใน light mode */
+}
+
+/* Dark mode */
+[data-bs-theme='dark'] {
+  background-color: #212529; /* สีพื้นหลังสำหรับ dark mode */
+  color: #ffffff; /* สีตัวอักษร */
+}
+
+[data-bs-theme='dark'] .navbar.BG-Main {
+  background-color: #343a40; /* สี Navbar ใน dark mode */
+}
+
+[data-bs-theme='dark'] .offcanvas {
+  background-color: #12151b; /* สี offcanvas ใน dark mode */
+}
+
+
+/* จำกัดแถวแสดงผลคำอธิบายคอร์สในการ์ด */
+.card-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 1; /* Limits to 1 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-description {
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Limits to 2 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ลบลูกศรเพิ่มลดตัวเลขใน input type="number" */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

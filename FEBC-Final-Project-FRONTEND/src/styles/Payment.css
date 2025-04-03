@@ -1,0 +1,11 @@
+.CardNumber{
+    border: none;
+    background: transparent;
+    outline: none;
+    
+}
+
+.CardNumber:focus{
+    border: none;
+    outline: none;
+}
