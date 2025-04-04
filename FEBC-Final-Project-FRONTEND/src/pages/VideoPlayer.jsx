@@ -11,23 +11,23 @@ import CheckIconBlack from "../assets/Material_Icon/check_black.svg";
 import ProgressBar from "../components/ProgressBar";
 
 function VideoPlayer() {
-  const location = useLocation();
-  const { id } = location.state || {};
-  const [course, setCourse] = useState({});
-  const { theme } = useTheme();
-  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
-  const [playedVideos, setPlayedVideos] = useState({});
-  const [progress, setProgress] = useState(0);
+  const location = useLocation(); // ดึง location จาก react-router-dom
+  const { id } = location.state || {}; // ดึง id ของคอร์สจาก location state
+  const [course, setCourse] = useState({}); // เก็บข้อมูลคอร์ส
+  const { theme } = useTheme(); // ดึง theme จาก context
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0); // เก็บ index ของวิดีโอที่กำลังเล่น
+  const [playedVideos, setPlayedVideos] = useState({}); // เก็บ index ของวิดีโอที่เล่นแล้ว
+  const [progress, setProgress] = useState(0); // เก็บความคืบหน้าของคอร์ส
 
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const res = await axios.get(`${config.API_BASE_URL}/courses/${id}`);
+        const res = await axios.get(`${config.API_BASE_URL}/courses/${id}`); // ดึงข้อมูลคอร์สจาก API
         setCourse(res.data);
 
         const storedPlayed = localStorage.getItem("playedVideo");
         const parsedPlayed = storedPlayed ? JSON.parse(storedPlayed) : {};
-        calculateProgress(parsedPlayed, res.data);
+        calculateProgress(parsedPlayed, res.data); // คำนวณความคืบหน้า
       } catch (error) {
         console.error("Error: ", error);
       }
@@ -40,12 +40,16 @@ function VideoPlayer() {
 
     loadPlayedVideos();
     fetchCourse();
-  }, [id]);
+  }, [id]);  // เรียก useEffect เมื่อ id เปลี่ยน
 
+  
+  // ฟังก์ชันสำหรับเลือกวิดีโอที่จะเล่น
   const handleSelectVideo = (videoIndex) => {
     setCurrentVideoIndex(videoIndex);
   };
 
+  
+  // ฟังก์ชันสำหรับบันทึกวิดีโอที่เล่นแล้ว
   const handlePlayedVideo = (courseId, videoIndex) => {
     if (courseId && videoIndex !== undefined) {
       const updatedPlayedVideos = { ...playedVideos };
@@ -61,6 +65,8 @@ function VideoPlayer() {
     }
   };
 
+  
+  // ฟังก์ชันสำหรับคำนวณความคืบหน้าของคอร์ส
   const calculateProgress = (updatedPlayedVideos, courseData) => {
     if (courseData?.videos?.length > 0) {
       const totalVideos = courseData.videos.length;
@@ -79,6 +85,7 @@ function VideoPlayer() {
     <MainLayout>
       <div className="container">
         <div className="row">
+        {/* ส่วนแสดงวิดีโอ */}
           <div className="col-12 col-sm-12 col-md-12 col-lg-8">
             {course.videos && course.videos.length > 0 ? (
               <div>
@@ -97,6 +104,7 @@ function VideoPlayer() {
             )}
           </div>
 
+          {/* ส่วนแสดงรายการวิดีโอ */}
           <div className="col-12 col-sm-12 col-md-12 col-lg-4 border">
             <div className="mt-2 p-2">
               <div className="d-flex justify-content-between">

@@ -7,19 +7,20 @@ import { Link } from "react-router-dom";
 import ProgressBar from "../components/ProgressBar";
 
 function Home() {
-  const [courses, setCourses] = useState([]);
-  const [filteredCourses, setFilteredCourses] = useState([]); // เปลี่ยนจากตัวแปรเป็น state
-  const [category, setCategory] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [continueLearningCourses, setContinueLearningCourses] = useState([]);
-  const [purchasedCourses, setPurchasedCourses] = useState([]);
-  const [courseProgress, setCourseProgress] = useState({});
+  const [courses, setCourses] = useState([]); // เก็บรายการคอร์สทั้งหมด
+  const [filteredCourses, setFilteredCourses] = useState([]); // เก็บรายการคอร์สที่ถูกกรอง
+  const [category, setCategory] = useState(""); // เก็บหมวดหมู่ที่เลือก
+  const [searchTerm, setSearchTerm] = useState(""); // เก็บคำค้นหา
+  const [continueLearningCourses, setContinueLearningCourses] = useState([]); // เก็บรายการคอร์สที่กำลังเรียนต่อ
+  const [purchasedCourses, setPurchasedCourses] = useState([]); // เก็บรายการคอร์สที่ซื้อแล้ว
+  const [courseProgress, setCourseProgress] = useState({}); // เก็บความคืบหน้าของแต่ละคอร์ส
 
   useEffect(() => {
-    fetchCourses(category);
-    loadProgress();
-  }, [category]);
+    fetchCourses(category); // เรียกฟังก์ชันดึงข้อมูลคอร์สตามหมวดหมู่
+    loadProgress(); // เรียกฟังก์ชันโหลดความคืบหน้าจาก localStorage
+  }, [category]); // เรียก useEffect เมื่อ category เปลี่ยน
 
+  // ฟังก์ชันดึงข้อมูลคอร์สจาก API
   const fetchCourses = async (category) => {
     if (category !== "") {
       try {
@@ -36,14 +37,14 @@ function Home() {
         const res = await axios.get(`${config.API_BASE_URL}/courses`);
         setCourses(res.data);
         setFilteredCourses(res.data); // ตั้งค่าเริ่มต้นให้แสดงทุกคอร์ส
-        getContinueLearning();
+        getContinueLearning(); // เรียกฟังก์ชันดึงคอร์สที่กำลังเรียนต่อเมื่อไม่มีหมวดหมู่
       } catch (error) {
         console.log("error", error);
       }
     }
   };
 
-  // load progress
+  // ฟังก์ชันโหลดความคืบหน้าจาก localStorage
   const loadProgress = () => {
     try {
       const storedProgress = localStorage.getItem("courseProgress");
@@ -53,7 +54,7 @@ function Home() {
     }
   };
 
-  // ฟังก์ชันสำหรับจัดการการค้นหาเมื่อกดปุ่ม
+  // ฟังก์ชันจัดการการค้นหาเมื่อกดปุ่ม
   const handleSearch = () => {
     const result = courses.filter(
       (course) =>
@@ -63,6 +64,7 @@ function Home() {
     setFilteredCourses(result);
   };
 
+  // ฟังก์ชันดึงคอร์สที่กำลังเรียนต่อจาก localStorage
   const getContinueLearning = () => {
     try {
       const recent = localStorage.getItem("recentLearn");
@@ -81,8 +83,9 @@ function Home() {
     <MainLayout>
       <Carousel />
 
-      {/* search bar */}
+      {/* แถบค้นหา */}
       <div className="mt-5 d-flex justify-content-center">
+        {/* dropdown เลือกหมวดหมู่ */}
         <div className="dropdown">
           <button
             className="btn btn-outline-secondary btn-lg dropdown-toggle overflow-hidden"
@@ -134,7 +137,9 @@ function Home() {
           </ul>
         </div>
 
+        {/* แถบค้นหา */}
         <div className="input-group-lg mb-3 w-75 d-flex ms-2">
+          {/* ช่องค้นหา */}
           <input
             type="text"
             className="form-control"
@@ -147,9 +152,9 @@ function Home() {
           </button>
         </div>
       </div>
-      {/* end search bar */}
+      {/* จบแถบค้นหา */}
 
-      {/* continue learning */}
+      {/* ส่วนแสดงคอร์สที่กำลังเรียนต่อ */}
       {searchTerm.length === 0 ? (
         <div className="container mt-4">
           <div className="row gy-4 justify-content-center">
@@ -187,9 +192,9 @@ function Home() {
       ) : (
         <></>
       )}
-      {/* end continue learning */}
+      {/* จบส่วนแสดงคอร์สที่กำลังเรียนต่อ */}
 
-      {/* all courses card stack */}
+      {/* ส่วนแสดงรายการคอร์สทั้งหมด */}
       <div className="container mt-4">
         <div className="row gy-4 justify-content-center">
           <p className="fs-4 fw-semibold">
@@ -243,7 +248,7 @@ function Home() {
           )}
         </div>
       </div>
-      {/* end card stack */}
+      {/* จบส่วนแสดงรายการคอร์สทั้งหมด */}
     </MainLayout>
   );
 }

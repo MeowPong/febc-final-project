@@ -18,16 +18,17 @@ import PlayIconBlack from "../assets/Material_Icon/play_circle_black.svg";
 import PlayIconWhite from "../assets/Material_Icon/play_circle_white.svg";
 
 function CourseDetail() {
-  const { id } = useParams(); // Destructure id properly
-  const [course, setCourse] = useState({});
-  const { theme } = useTheme();
-  const navigate = useNavigate();
-  const [continueLearningCourses, setContinueLearningCourses] = useState([]);
-  const [progress, setProgress] = useState(0);
+  const { id } = useParams(); // ดึง id ของคอร์สจาก URL
+  const [course, setCourse] = useState({}); // เก็บข้อมูลคอร์ส
+  const { theme } = useTheme(); // ดึง theme จาก context
+  const navigate = useNavigate(); // hook สำหรับเปลี่ยนเส้นทาง
+  const [continueLearningCourses, setContinueLearningCourses] = useState([]); // เก็บรายการคอร์สที่กำลังเรียนต่อ
+  const [progress, setProgress] = useState(0); // เก็บความคืบหน้าของคอร์ส
 
-  dayjs.extend(duration);
+  dayjs.extend(duration); // เพิ่ม plugin duration ให้ dayjs
 
   useEffect(() => {
+    // ดึงข้อมูลคอร์สจาก API
     const fetchCourse = async () => {
       try {
         const res = await axios.get(`${config.API_BASE_URL}/courses/${id}`);
@@ -38,10 +39,12 @@ function CourseDetail() {
     };
 
     fetchCourse();
-    getContinueLearning();
-    loadProgress();
-  }, [id]);
+    getContinueLearning(); // ดึงคอร์สที่กำลังเรียนต่อ
+    loadProgress(); // โหลดความคืบหน้าของคอร์ส
+  }, [id]); // เรียก useEffect เมื่อ id เปลี่ยน
 
+
+  // โหลดความคืบหน้าของคอร์สจาก localStorage
   const loadProgress = () => {
     try {
       const storedProgress = localStorage.getItem("courseProgress");
@@ -53,40 +56,44 @@ function CourseDetail() {
     }
   };
 
+
+  // ฟังก์ชันสำหรับเปลี่ยนเส้นทางไปยังหน้า VideoPlayer หรือ Payment
   const navigatePage = (id, price, course) => {
+    // ถ้าคอร์สเป็น Open Access
     if (price === "Open Access") {
       let recentLearn = [];
       try {
         const storedRecent = localStorage.getItem("recentLearn");
         recentLearn = storedRecent ? JSON.parse(storedRecent) : [];
-        // Ensure recentLearn is an array
+        // ตรวจสอบว่า recentLearn เป็น array หรือไม่
         if (!Array.isArray(recentLearn)) {
-          recentLearn = [];
+          recentLearn = []; // กำหนดให้เป็น array ว่างหากเกิด error
         }
       } catch (error) {
         console.error("Error parsing recentLearn from localStorage:", error);
-        recentLearn = []; // Fallback to empty array on parse error
+        recentLearn = []; // กำหนดให้เป็น array ว่างหากเกิด error
       }
 
-      // Remove existing course if it already exists
+      // ลบคอร์สที่มีอยู่แล้วออกจาก recentLearn
       const courseIndex = recentLearn.findIndex(
         (item) => item.id === course.id
       );
       if (courseIndex !== -1) {
-        recentLearn.splice(courseIndex, 1); // Remove the old instance
+        recentLearn.splice(courseIndex, 1); // ลบคอร์สเก่า
       }
 
-      // Add the course to the beginning of the array
+      // เพิ่มคอร์สใหม่ลงใน recentLearn
       recentLearn.unshift(course);
 
-      // Limit to 4 recent courses
       localStorage.setItem("recentLearn", JSON.stringify(recentLearn));
-      navigate("/VideoPlayer", { state: { id } });
+      navigate("/VideoPlayer", { state: { id } }); // เปลี่ยนเส้นทางไปยังหน้า VideoPlayer
     } else {
-      navigate("/Payment");
+      navigate("/Payment"); // เปลี่ยนเส้นทางไปยังหน้า Payment
     }
   };
 
+
+  // ดึงคอร์สที่กำลังเรียนต่อจาก localStorage
   const getContinueLearning = () => {
     try {
       const recent = localStorage.getItem("recentLearn");
@@ -176,6 +183,7 @@ function CourseDetail() {
             {/* Course content */}
             <div className="my-5">
               <div className="fs-3 fw-semibold mb-3">Course content</div>
+              {/* แสดงเนื้อหาคอร์สแบบ accordion */}
               <div className="accordion" id="courseAccordion">
                 {course?.videos && course.videos.length > 0 ? (
                   course.videos.map((item, index) => (
@@ -242,6 +250,7 @@ function CourseDetail() {
           {/* end left */}
 
           {/* right */}
+          {/* แสดงปุ่มเรียนต่อหากคอร์สอยู่ในรายการเรียนต่อ */}
           {continueLearningCourses.some((c) => c.id === course.id) ? (
             <div className="col-12 col-sm-12 col-md-12 col-lg-4">
               <div className="border p-3">
@@ -280,6 +289,7 @@ function CourseDetail() {
             </div>
           ) : (
             <div className="col-4 col-sm-12 col-md-12 col-lg-4">
+              {/* แสดงปุ่มซื้อหากคอร์สยังไม่ได้ซื้อ */}
               <div className="border p-3">
                 <p className="fs-2">{course.name}</p>
                 <p className="fs-4">
