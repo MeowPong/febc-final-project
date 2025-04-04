@@ -51,7 +51,7 @@ function CourseDetail() {
       const progressData = storedProgress ? JSON.parse(storedProgress) : {};
       setProgress(progressData[id] || 0);
     } catch (error) {
-      console.log("Error loading progress", error);
+      console.error("Error loading progress", error);
       setProgress(0);
     }
   };
@@ -101,7 +101,7 @@ function CourseDetail() {
 
       setContinueLearningCourses(parsedRecent);
     } catch (error) {
-      console.log("Error ", error);
+      console.error("Error ", error);
       setContinueLearningCourses([]);
     }
   };

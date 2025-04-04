@@ -30,7 +30,7 @@ function Home() {
         setCourses(res.data);
         setFilteredCourses(res.data); // ตั้งค่าเริ่มต้นให้แสดงทุกคอร์ส
       } catch (error) {
-        console.log("error", error);
+        console.error("error", error);
       }
     } else {
       try {
@@ -39,7 +39,7 @@ function Home() {
         setFilteredCourses(res.data); // ตั้งค่าเริ่มต้นให้แสดงทุกคอร์ส
         getContinueLearning(); // เรียกฟังก์ชันดึงคอร์สที่กำลังเรียนต่อเมื่อไม่มีหมวดหมู่
       } catch (error) {
-        console.log("error", error);
+        console.error("error", error);
       }
     }
   };
@@ -50,7 +50,7 @@ function Home() {
       const storedProgress = localStorage.getItem("courseProgress");
       setCourseProgress(storedProgress ? JSON.parse(storedProgress) : {});
     } catch (error) {
-      console.log("Error loading progress", error);
+      console.error("Error loading progress", error);
     }
   };
 
@@ -73,7 +73,7 @@ function Home() {
       setPurchasedCourses(parsedRecent); 
       setContinueLearningCourses(parsedRecent.slice(0, 4));
     } catch (error) {
-      console.log("Error ", error);
+      console.error("Error ", error);
       setContinueLearningCourses([]);
       setPurchasedCourses([])
     }
